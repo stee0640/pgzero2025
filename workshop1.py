@@ -17,6 +17,10 @@ def rumskib_update():
         rumskib.x -= 5
     if keyboard.right: 
         rumskib.x += 5
+    if keyboard.up: 
+        rumskib.y -= 5
+    if keyboard.down: 
+        rumskib.y += 5
 
 def update():
     global bg_y
@@ -26,3 +30,4 @@ def update():
     rumskib_update()
     
 pgzrun.go()
+
