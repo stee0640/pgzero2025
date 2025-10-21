@@ -72,7 +72,6 @@ def skud_update():
             skud_liste.remove(skud)
             animate(ufo, x = random.randrange(WIDTH+1))
 
-
 def draw():
     screen.blit('stjerner.png', (0, bg_y))
     for stjerne in stjerne_liste:
