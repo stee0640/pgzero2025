@@ -1,13 +1,14 @@
 import pgzrun
+import random
 
 WIDTH = 600
 HEIGHT = 600
 
+bg_y = -600
+
 rumskib = Actor("rumskib1")
 rumskib.bottom = HEIGHT
 rumskib.x = WIDTH//2
-
-import random
 
 stjerne_liste = []
 for _ in range(50):
@@ -18,15 +19,6 @@ for _ in range(50):
 
 skud_liste = []
 ufo = Actor('ufo1', pos=(300,100))
-            
-def draw():
-    screen.clear() # Kun hvis kode til blit af baggrund er fjernet
-    for stjerne in stjerne_liste:
-        stjerne.draw()
-    ufo.draw()
-    for skud in skud_liste:
-        skud.draw()
-    rumskib.draw()
 
 def rumskib_bliv_paa_banen():
     if rumskib.top < 0: 
@@ -41,6 +33,20 @@ def rumskib_bliv_paa_banen():
 def on_mouse_down():
     skud = Actor("skud1", pos=rumskib.midtop)
     skud_liste.append(skud)   
+
+def baggrund_update():
+    global bg_y
+    bg_y += 1
+    if bg_y > 0:
+        bg_y -= 1200
+
+def stjerner_update():
+    for stjerne in stjerne_liste:
+        if stjerne.y < HEIGHT + 8:
+            stjerne.y += 1.5
+        else:
+            stjerne.x = random.randrange(WIDTH+1)
+            stjerne.y = -8
 
 def rumskib_update():
     if keyboard.left: 
@@ -57,14 +63,7 @@ def rumskib_update():
     rumskib.y += 2
     rumskib_bliv_paa_banen()
 
-def update():
-    for stjerne in stjerne_liste:
-        if stjerne.y < HEIGHT + 8:
-            stjerne.y += 1
-        else:
-            stjerne.x = random.randrange(WIDTH+1)
-            stjerne.y = -8
-    rumskib_update()
+def skud_update():
     for skud in skud_liste:
         skud.y -= 6
         if skud.bottom < 0:
@@ -72,5 +71,21 @@ def update():
         if skud.colliderect(ufo):
             skud_liste.remove(skud)
             animate(ufo, x = random.randrange(WIDTH+1))
+
+
+def draw():
+    screen.blit('stjerner.png', (0, bg_y))
+    for stjerne in stjerne_liste:
+        stjerne.draw()
+    ufo.draw()
+    for skud in skud_liste:
+        skud.draw()
+    rumskib.draw()
+
+def update():
+    baggrund_update()
+    stjerner_update()
+    rumskib_update()
+    skud_update()
 
 pgzrun.go()
